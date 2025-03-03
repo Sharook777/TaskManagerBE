@@ -11,20 +11,30 @@ const app = express();
 dotEnv.config();
 
 const PORT = process.env.PORT;
-const CORS_ORIGN = { origin: "http://localhost:3000/" };
+const allowedOrigins = process.env.CORS_ORIGINS.split(",");
 
 initiateMongoDb();
 
 app.use(express.json());
-app.use(cors());
-app.use(logger("dev")); //"combined"
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+app.use(logger("combined"));
 
 app.get("/", (_, res) => {
   res.send("Hello, Express!");
 });
 
 app.use("/api/", apiRouter);
-app.options("*", cors(CORS_ORIGN));
 app.use(express.urlencoded({ extended: true }));
 app.get("*", function (_, res) {
   res.status(404).json({ message: "Not found" });

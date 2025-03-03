@@ -24,7 +24,10 @@ appRouter.delete("/task/:id", deleteTask);
 
 appRouter.post(
   "/reset-password",
-  [check("newPassword").not().isEmpty()],
+  [
+    check("currentPasword").not().isEmpty(),
+    check("newPassword").not().isEmpty(),
+  ],
   resetPassword
 );
 

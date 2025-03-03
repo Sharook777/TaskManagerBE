@@ -1,4 +1,5 @@
 import { validationResult } from "express-validator";
+import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 
 import User from "./model.js";
@@ -13,7 +14,7 @@ export default async function resetPassword(req, res) {
     });
   }
 
-  const { newPassword } = req.body;
+  const { newPassword, currentPasword } = req.body;
 
   try {
     const user = await User.findOne({ _id: req.userId }).select(
@@ -24,6 +25,16 @@ export default async function resetPassword(req, res) {
         success: false,
         message: "Match Not Found",
       });
+    }
+
+    const isMatch = await bcrypt.compareSync(
+      currentPasword.toString(),
+      user.password
+    );
+    if (!isMatch) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Incorrect old password" });
     }
 
     user.password = newPassword;
