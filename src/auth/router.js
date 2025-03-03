@@ -11,13 +11,13 @@ const loginRules = [
   check("password").not().isEmpty(),
 ];
 
-const regitstionRules = [
+const registrationRules = [
   check("email").not().isEmpty(),
   check("password").not().isEmpty(),
   check("name").not().isEmpty(),
 ];
 
 authRouter.post("/login", loginRules, loginController);
-authRouter.post("/register", regitstionRules, registerController);
+authRouter.post("/register", registrationRules, registerController);
 
 export default authRouter;

@@ -11,7 +11,6 @@ const schema = new Schema({
   },
   name: {
     type: String,
-    unique: true,
     required: "Name Required",
   },
   password: { type: String, select: false, required: "Password Required" },

@@ -8,7 +8,7 @@ export default async function getItem(req, res) {
     }
     const response = await Tasks.findById(id)
       .populate("createdBy", "name email")
-      .select("name title createdAt createdBy");
+      .select("description title createdAt createdBy");
 
     if (!response) {
       return res.status(401).json({
